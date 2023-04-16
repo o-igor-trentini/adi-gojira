@@ -1,3 +1,3 @@
-module github.com/o-igor-trentini/adi-gojira
+module adi-gojira
 
 go 1.20
