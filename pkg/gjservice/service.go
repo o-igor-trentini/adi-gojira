@@ -1,10 +1,11 @@
 package gjservice
 
 import (
-	"adi-gojira/internal/encoder"
-	"adi-gojira/pkg/gjmodels"
 	"fmt"
 	"net/url"
+
+	"github.com/o-igor-trentini/adi-gojira/internal/encoder"
+	"github.com/o-igor-trentini/adi-gojira/pkg/gjmodels"
 )
 
 type SearchByJQLPayload struct {
