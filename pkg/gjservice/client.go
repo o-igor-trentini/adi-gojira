@@ -1,9 +1,10 @@
 package gjservice
 
 import (
-	"adi-gojira/internal/gjutils"
 	"fmt"
 	"net/http"
+
+	"github.com/o-igor-trentini/adi-gojira/internal/gjutils"
 )
 
 type Client struct {
