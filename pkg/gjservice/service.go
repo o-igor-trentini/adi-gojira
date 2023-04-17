@@ -3,17 +3,12 @@ package gjservice
 import (
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/o-igor-trentini/adi-gojira/internal/encoder"
-	"github.com/o-igor-trentini/adi-gojira/pkg/gjmodels"
 )
 
-type SearchByJQLPayload struct {
-	gjmodels.Pagination
-	Issues []gjmodels.Issue `json:"issues"`
-}
-
-// SearchByJQL busca de forma paginada as tarefas de acordo com o JQL (SQL do Jira).
+// SearchByJQL busca de forma paginada as tarefas de acordo com JQL (SQL do Jira).
 func (c Client) SearchByJQL(queryParams map[string]string) (SearchByJQLPayload, error) {
 	var qParams string
 
@@ -29,10 +24,38 @@ func (c Client) SearchByJQL(queryParams map[string]string) (SearchByJQLPayload, 
 
 	data := SearchByJQLPayload{}
 
-	res, err := c.get("search" + qParams)
+	_, body, err := c.get("search" + qParams)
 	if err != nil {
 		return data, fmt.Errorf("não foi possível buscar por JQL [erro: %s]", err)
 	}
 
-	return data, encoder.DecodeRequestResponse(res, &data)
+	var names expandedNames
+
+	if err := encoder.Decode(body, &names); err != nil {
+		return data, err
+	}
+
+	var developerFieldKeys []string
+	devField := c.customFields.Developer
+
+	// pega os campos customizados de 'desenvolvedor' de cada projeto
+	// e transforma em uma única chave
+	if len(names.Values) > 0 {
+		if devField != nil {
+			for key, value := range names.Values {
+				if value == *devField {
+					developerFieldKeys = append(developerFieldKeys, key)
+				}
+			}
+		}
+		strBody := string(body)
+
+		for _, v := range developerFieldKeys {
+			strBody = strings.ReplaceAll(string(body), v, "developer")
+		}
+
+		body = []byte(strBody)
+	}
+
+	return data, encoder.Decode(body, &data)
 }

@@ -59,6 +59,7 @@ type IssueFields struct {
 	Creator        User          `json:"creator"`
 	Reporter       User          `json:"reporter"`
 	Assignee       *User         `json:"assignee"`
+	Developer      *User         `json:"developer"`
 }
 
 type Issue struct {
