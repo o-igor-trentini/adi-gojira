@@ -51,7 +51,7 @@ func (c Client) SearchByJQL(queryParams map[string]string) (SearchByJQLPayload, 
 		strBody := string(body)
 
 		for _, v := range developerFieldKeys {
-			strBody = strings.ReplaceAll(string(body), v, "developer")
+			strBody = strings.ReplaceAll(string(body), v, "developers")
 		}
 
 		body = []byte(strBody)
