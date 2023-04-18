@@ -38,7 +38,7 @@ func (c Client) SearchByJQL(queryParams map[string]string, customFields CustomFi
 		strBody := string(body)
 
 		for _, v := range customFields.Developer {
-			strBody = strings.ReplaceAll(string(body), v, "developers")
+			strBody = strings.ReplaceAll(strBody, v, "developers")
 		}
 
 		body = []byte(strBody)
