@@ -9,6 +9,6 @@ type SearchByJQLPayload struct {
 	Issues []gjmodels.Issue `json:"issues"`
 }
 
-type expandedNames struct {
-	Values map[string]string `json:"names"`
+type CustomFields struct {
+	Developer []string
 }

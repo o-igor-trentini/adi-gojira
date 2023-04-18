@@ -9,7 +9,10 @@ import (
 )
 
 // SearchByJQL busca de forma paginada as tarefas de acordo com JQL (SQL do Jira).
-func (c Client) SearchByJQL(queryParams map[string]string) (SearchByJQLPayload, error) {
+func (c Client) SearchByJQL(queryParams map[string]string, customFields CustomFields) (
+	SearchByJQLPayload,
+	error,
+) {
 	var qParams string
 
 	if len(queryParams) > 0 {
@@ -29,28 +32,12 @@ func (c Client) SearchByJQL(queryParams map[string]string) (SearchByJQLPayload, 
 		return data, fmt.Errorf("não foi possível buscar por JQL [erro: %s]", err)
 	}
 
-	var names expandedNames
-
-	if err := encoder.Decode(body, &names); err != nil {
-		return data, err
-	}
-
-	var developerFieldKeys []string
-	devField := c.customFields.Developer
-
 	// pega os campos customizados de 'desenvolvedor' de cada projeto
 	// e transforma em uma única chave
-	if len(names.Values) > 0 {
-		if devField != nil {
-			for key, value := range names.Values {
-				if value == *devField {
-					developerFieldKeys = append(developerFieldKeys, key)
-				}
-			}
-		}
+	if len(customFields.Developer) > 0 {
 		strBody := string(body)
 
-		for _, v := range developerFieldKeys {
+		for _, v := range customFields.Developer {
 			strBody = strings.ReplaceAll(string(body), v, "developers")
 		}
 

@@ -7,9 +7,4 @@ type Config struct {
 	JiraUsername string
 	JiraToken    string
 	HTTPClient   http.Client
-	CustomFields ConfigCustomFields
-}
-
-type ConfigCustomFields struct {
-	Developer *string
 }
